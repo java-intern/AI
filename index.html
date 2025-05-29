@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+    #login {
+      text-align: center;
+      margin-top: 100px;
+    }
+    #main {
+      display: none;
+    }
+    input[type="password"], input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .file-title {
+      cursor: pointer;
+      background: #fff;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+    }
+    #codeDisplay {
+      white-space: pre-wrap;
+      background: #000;
+      color: #0f0;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+      position: relative;
+    }
+    #copyBtn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #0f0;
+      color: #000;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="login">
+  <h2>Enter Password</h2>
+  <input type="password" id="password" placeholder="Enter password">
+  <br>
+  <button onclick="checkPassword()">Enter</button>
+</div>
+
+<div id="main">
+  <h2>Search Codes</h2>
+  <input type="text" id="search" placeholder="Search titles..." oninput="filterFiles()">
+  <div id="fileList"></div>
+  <div id="codeDisplay" style="display: none;">
+    <button id="copyBtn" onclick="copyCode()">Copy</button>
+    <pre id="codeContent"></pre>
+  </div>
+</div>
+
+<script>
+  const GITHUB_USER = "java-intern";
+  const REPO_NAME = "AI";
+  const FOLDER_NAME = "codes";
+  const PASSWORD = "123321";
+
+  function checkPassword() {
+    const input = document.getElementById("password").value;
+    if (input === PASSWORD) {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("main").style.display = "block";
+      loadFiles();
+    } else {
+      alert("Wrong password");
+    }
+  }
+
+  async function loadFiles() {
+    try {
+      const url = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FOLDER_NAME}`;
+      const res = await fetch(url);
+      const files = await res.json();
+
+      if (!Array.isArray(files)) throw new Error("Invalid folder");
+
+      window.fileData = files;
+      displayFiles(files);
+    } catch (error) {
+      document.getElementById("fileList").innerHTML = "<p>Error loading files. Check repo or folder.</p>";
+    }
+  }
+
+  function displayFiles(files) {
+    const list = document.getElementById("fileList");
+    list.innerHTML = "";
+
+    files.forEach(file => {
+      const div = document.createElement("div");
+      div.className = "file-title";
+      div.textContent = file.name;
+      div.onclick = () => loadFileContent(file.name);
+      list.appendChild(div);
+    });
+  }
+
+  async function loadFileContent(filename) {
+    const url = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO_NAME}/main/${FOLDER_NAME}/${filename}`;
+    const res = await fetch(url);
+    const content = await res.text();
+    document.getElementById("codeContent").textContent = content;
+    document.getElementById("codeDisplay").style.display = "block";
+  }
+
+  function copyCode() {
+    const code = document.getElementById("codeContent").textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      alert("Code copied!");
+    });
+  }
+
+  function filterFiles() {
+    const query = document.getElementById("search").value.toLowerCase();
+    const filtered = window.fileData.filter(file => file.name.toLowerCase().includes(query));
+    displayFiles(filtered);
+  }
+</script>
+
+</body>
+</html>
