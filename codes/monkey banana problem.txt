@@ -1,0 +1,6 @@
+can_reach(monkey, banana) :- has_box(monkey), climb(monkey), push(monkey), grab(monkey).
+
+has_box(monkey).
+climb(monkey).
+push(monkey).
+grab(monkey).

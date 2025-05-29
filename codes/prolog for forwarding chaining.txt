@@ -1,0 +1,8 @@
+% Facts
+sunny.
+warm :- sunny.
+go_out :- warm.
+
+% Query:
+% ?- go_out.
+% Output: true (if sunny is true, warm becomes true, then go_out becomes true).

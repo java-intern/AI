@@ -1,0 +1,6 @@
+match([H|_], H).          % Match head of list
+match([_|T], X) :- match(T, X). % Match in tail
+
+% Query:
+% ?- match([apple, banana, mango], banana).
+% Output: true

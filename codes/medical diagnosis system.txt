@@ -1,0 +1,8 @@
+symptom(john, fever).
+symptom(john, cough).
+symptom(mary, rash).
+
+disease(john, flu) :- symptom(john, fever), symptom(john, cough).
+disease(mary, measles) :- symptom(mary, rash).
+
+diagnose(Person, Disease) :- disease(Person, Disease).

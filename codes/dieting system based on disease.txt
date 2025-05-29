@@ -1,0 +1,5 @@
+disease_diabetes(low_sugar, vegetables).
+disease_hypertension(low_salt, fruits).
+
+diet(Disease, Suggestion) :- disease_diabetes(Disease, Suggestion).
+diet(Disease, Suggestion) :- disease_hypertension(Disease, Suggestion).

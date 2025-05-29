@@ -1,0 +1,10 @@
+is_vowel(a). is_vowel(e). is_vowel(i). is_vowel(o). is_vowel(u).
+
+count_vowels([], 0).
+count_vowels([H|T], Count) :-
+    count_vowels(T, Rest),
+    (is_vowel(H) -> Count is Rest + 1 ; Count is Rest).
+
+% Query:
+% ?- count_vowels([a,b,c,e,i,o,x], N).
+% Output: N = 4

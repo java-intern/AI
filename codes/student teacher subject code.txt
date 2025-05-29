@@ -1,0 +1,8 @@
+teaches(john, math101).
+teaches(susan, phy101).
+
+studies(anna, math101).
+studies(mark, phy101).
+
+teacher_of(Student, Teacher) :-
+    studies(Student, Sub), teaches(Teacher, Sub).

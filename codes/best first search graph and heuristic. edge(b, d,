@@ -1,0 +1,12 @@
+edge(a, b, 1). edge(a, c, 3). edge(b, d, 1). edge(c, d, 1).
+
+heuristic(a, 4). heuristic(b, 2). heuristic(c, 2). heuristic(d, 0).
+
+best_first(Node, Goal, Path) :- bfs([[Node]], Goal, Path).
+
+bfs([[Goal|T]|_], Goal, [Goal|T]).
+bfs([[N|T]|Rest], Goal, Path) :-
+    findall([M,N|T], (edge(N, M, _), \+ member(M, [N|T])), NewPaths),
+    append(Rest, NewPaths, Queue),
+    sort(2, @=<, Queue, Sorted), % sort by heuristic
+    bfs(Sorted, Goal, Path).

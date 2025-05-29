@@ -1,0 +1,10 @@
+% Rules
+likes(john, pizza).
+likes(john, pasta).
+likes(jane, pasta).
+
+food_lover(X) :- likes(X, pizza), likes(X, pasta).
+
+% Query:
+% ?- food_lover(john).
+% Output: true
